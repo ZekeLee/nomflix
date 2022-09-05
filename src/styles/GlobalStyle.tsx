@@ -14,6 +14,7 @@ const GlobalStyle = createGlobalStyle`
   }
   #root{
     margin: 0 auto;
+    height: 100%;
   }
   a{color:inherit;text-decoration:none;}
 `;
