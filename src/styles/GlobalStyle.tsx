@@ -16,7 +16,8 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     height: 100%;
   }
-  a{color:inherit;text-decoration:none;}
+  a, button, input{all: unset;}
+  a, button{cursor:pointer;}
 `;
 
 export default GlobalStyle;
