@@ -1,17 +1,16 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { motion } from 'framer-motion';
+import { motion, useAnimation, useScroll } from 'framer-motion';
 
-const HeaderEl = styled.header`
+const HeaderEl = styled(motion.header)`
   position: fixed;
   top: 0;
   left: 0;
   padding: 0 2rem;
   width: 100%;
   font-size: 0.875rem;
-  background: #000;
 `;
 
 const Nav = styled.nav`
@@ -63,12 +62,17 @@ const Search = styled(motion.div)`
   position: relative;
   display: flex;
   align-items: center;
-  height: 1.5rem;
+  gap: 0.5rem;
+  height: 3rem;
+  &.active {
+    padding: 0.5rem;
+    border: 1px solid ${(props) => props.theme.white.darker};
+  }
   button {
     height: 100%;
   }
   svg {
-    height: 100%;
+    height: 1.5rem;
     color: ${(props) => props.theme.white.darker};
   }
 `;
@@ -93,10 +97,30 @@ const Header = () => {
   const homeMatch = useMatch('');
   const tvMatch = useMatch('tv');
 
-  const toggleSearch = () => setIsSearchActive((prev) => !prev);
+  const headerRef = useRef();
+
+  const headerAnimation = useAnimation();
+  const inputAnimation = useAnimation();
+
+  const { scrollY } = useScroll();
+
+  const toggleSearch = () => {
+    if (isSearchActive) {
+      inputAnimation.start({
+        scaleX: 0,
+      });
+    } else {
+      inputAnimation.start({ scaleX: 1 });
+    }
+    setIsSearchActive((prev) => !prev);
+  };
+
+  useEffect(() => {
+    scrollY.onChange(() => {});
+  }, [scrollY]);
 
   return (
-    <HeaderEl>
+    <HeaderEl ref={headerRef} initial={{ backgroundColor: 'rgba(0, 0, 0, 1' }}>
       <Nav>
         <Col>
           <Link to="">
@@ -128,6 +152,7 @@ const Header = () => {
         </Col>
         <Col>
           <Search
+            className={'' + (isSearchActive ? 'active' : null)}
             initial={{ width: '1.5rem' }}
             animate={{ width: isSearchActive ? 'auto' : '1.5rem' }}
             transition={{ type: 'linear' }}
@@ -144,7 +169,7 @@ const Header = () => {
             <Input
               type="text"
               initial={{ scaleX: 0 }}
-              animate={{ scaleX: isSearchActive ? 1 : 0 }}
+              animate={inputAnimation}
               transition={{ type: 'linear' }}
               placeholder="Search for movie or tv show..."
             />

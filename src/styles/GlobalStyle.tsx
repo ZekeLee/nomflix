@@ -8,6 +8,7 @@ const GlobalStyle = createGlobalStyle`
   html{font-size:16px;}
   html,body{height:100%;}
   body{
+    height: 200vh;
     font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     font-weight: 400;
     word-break:break-word;
@@ -16,7 +17,7 @@ const GlobalStyle = createGlobalStyle`
     margin: 0 auto;
     height: 100%;
   }
-  a, button, input{all: unset;}
+  a, button, input{all: unset;color: ${(props) => props.theme.white.darker}}
   a, button{cursor:pointer;}
 `;
 
