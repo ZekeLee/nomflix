@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import { motion, useAnimation, useScroll } from 'framer-motion';
 
 const HeaderEl = styled(motion.header)`
-  position: sticky;
+  position: fixed;
   top: 0;
   left: 0;
   padding: 0 2rem;
@@ -122,7 +122,7 @@ const Header = () => {
 
   useEffect(() => {
     scrollY.onChange(() => {
-      if (scrollY.get() > headerRef.current.clientHeight) {
+      if (scrollY.get() > headerRef.current?.clientHeight) {
         headerAnimation.start('scroll');
       } else {
         headerAnimation.start('top');

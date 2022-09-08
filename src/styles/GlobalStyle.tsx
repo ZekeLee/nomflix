@@ -8,10 +8,11 @@ const GlobalStyle = createGlobalStyle`
   html{font-size:16px;}
   html,body{height:100%;}
   body{
-    height: 200vh;
     font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", sans-serif;
     font-weight: 400;
+    color: ${(props) => props.theme.white.darker};
     word-break:break-word;
+    background-color: #000;
   }
   #root{
     margin: 0 auto;
