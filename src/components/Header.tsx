@@ -1,11 +1,11 @@
-import { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { motion, useAnimation, useScroll } from 'framer-motion';
 
 const HeaderEl = styled(motion.header)`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   padding: 0 2rem;
@@ -82,6 +82,11 @@ const Input = styled(motion.input)`
   transform-origin: right;
 `;
 
+const headerVariants = {
+  top: { backgroundColor: 'rgba(0, 0, 0, 0)' },
+  scroll: { backgroundColor: 'rgba(0, 0, 0, 1)' },
+};
+
 const logoVariants = {
   normal: {
     opacity: 1,
@@ -97,7 +102,7 @@ const Header = () => {
   const homeMatch = useMatch('');
   const tvMatch = useMatch('tv');
 
-  const headerRef = useRef();
+  const headerRef = useRef<any>(null);
 
   const headerAnimation = useAnimation();
   const inputAnimation = useAnimation();
@@ -116,11 +121,22 @@ const Header = () => {
   };
 
   useEffect(() => {
-    scrollY.onChange(() => {});
-  }, [scrollY]);
+    scrollY.onChange(() => {
+      if (scrollY.get() > headerRef.current.clientHeight) {
+        headerAnimation.start('scroll');
+      } else {
+        headerAnimation.start('top');
+      }
+    });
+  }, [scrollY, headerAnimation]);
 
   return (
-    <HeaderEl ref={headerRef} initial={{ backgroundColor: 'rgba(0, 0, 0, 1' }}>
+    <HeaderEl
+      ref={headerRef}
+      variants={headerVariants}
+      initial="top"
+      animate={headerAnimation}
+    >
       <Nav>
         <Col>
           <Link to="">
