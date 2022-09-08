@@ -1,8 +1,8 @@
-# Nomflix
+# Nomflix(Netflix clone)
 
 ## 📌 Skills
 
-- React(CRA with TypeScript), react-router-dom@6, react-query, react-hook-form, styled-components, framer-motion
+- React(CRA with TypeScript), react-router-dom@6, recoil, react-query, react-hook-form, styled-components, framer-motion, API - [TheMovieDB API](https://www.themoviedb.org/settings/api?language=ko)
 
 <!-- # 💰 Crypto Tracker
 
