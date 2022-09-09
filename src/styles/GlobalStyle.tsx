@@ -17,6 +17,7 @@ const GlobalStyle = createGlobalStyle`
   #root{
     margin: 0 auto;
     height: 100%;
+    overflow: hidden auto;
   }
   a, button, input{all: unset;color: ${(props) => props.theme.white.darker}}
   a, button{cursor:pointer;}
