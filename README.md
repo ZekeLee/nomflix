@@ -1,8 +1,41 @@
-# Nomflix(Netflix clone)
+# 🎬 Nomflix(clone Netflix)
+
+## 📌 Deploy URL
+
+- [https://dingunote.github.io/nomflix/](https://dingunote.github.io/nomflix/)
 
 ## 📌 Skills
 
-- React(CRA with TypeScript), react-router-dom@6, recoil, react-query, react-hook-form, styled-components, framer-motion, API - [TheMovieDB API](https://www.themoviedb.org/settings/api?language=ko)
+- React(CRA with TypeScript), react-router-dom@6, recoil, react-query, react-hook-form, styled-components, framer-motion, API - [TheMovieDB API](https://www.themoviedb.org/settings/api?language=ko), gh-pages
+
+## 📌 Page Directory
+
+- `/`: 메인 페이지
+- `/tv`: TV 쇼 페이지
+
+## 📌 File Path
+
+```bash
+├── public                     Static Files
+│
+└── src
+    ├── api
+    │   └── index.ts           API function
+    ├── components
+    │   └── Header.tsx         Header Component
+    ├── routes
+    │   ├── Home.tsx           Main Page
+    │   ├── Search.tsx         Search Page
+    │   └── Tv.tsx             TV Show Page
+    ├── styles
+    │   ├── GlobalStyle.tsx    Global Style Component
+    │   ├── style.d.ts         styled-components module file
+    │   └── theme.ts           styled-components theme file
+    ├── utils
+    │   └── index.ts           Util functions
+    ├── App.tsx                App Component
+    └── index.tsx
+```
 
 <!-- # 💰 Crypto Tracker
 
