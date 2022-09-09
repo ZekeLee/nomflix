@@ -6,7 +6,7 @@ import Tv from './routes/Tv';
 
 const App = () => {
   return (
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <Header />
       <Routes>
         <Route path="/" element={<Home />}></Route>
