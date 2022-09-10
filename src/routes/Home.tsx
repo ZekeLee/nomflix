@@ -56,13 +56,33 @@ const Row = styled(motion.ul)`
 `;
 
 const Item = styled(motion.li)<{ $bgImg: string }>`
-  background-color: #fff;
+  position: relative;
   height: 100%;
   font-size: 3rem;
   color: red;
   background-image: url(${(props) => props.$bgImg});
   background-position: center center;
   background-size: cover;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
+`;
+
+const Info = styled(motion.div)`
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  padding: 0.5rem;
+  width: 100%;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  h3 {
+    font-size: 0.75rem;
+    color: ${(props) => props.theme.white.darker};
+  }
 `;
 
 const rowVariants = {
@@ -74,6 +94,33 @@ const rowVariants = {
   },
   exit: {
     x: -window.innerWidth - 8,
+  },
+};
+
+const itemVariants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    y: -30,
+    scale: 1.3,
+    zIndex: 10,
+    transition: {
+      type: 'tween',
+      delay: 0.3,
+      duration: 0.3,
+    },
+  },
+};
+
+const infoVariants = {
+  hover: {
+    opacity: 1,
+    transition: {
+      type: 'tween',
+      delay: 0.3,
+      duration: 0.3,
+    },
   },
 };
 
@@ -129,8 +176,16 @@ const Home = () => {
                     .map((item) => (
                       <Item
                         key={item.id}
+                        variants={itemVariants}
+                        initial="normal"
+                        whileHover="hover"
+                        transition={{ type: 'tween' }}
                         $bgImg={makeImagePath(item.backdrop_path, 'w500')}
-                      />
+                      >
+                        <Info variants={infoVariants}>
+                          <h3>{item.title}</h3>
+                        </Info>
+                      </Item>
                     ))}
                 </Row>
               </AnimatePresence>
