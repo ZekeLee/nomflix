@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { useQuery } from 'react-query';
+import { useMatch, useNavigate } from 'react-router-dom';
 import { getMovies, IMoviesResult } from '../api';
 import { makeImagePath } from '../utils';
 
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState } from 'react';
 
 const Wrapper = styled.main``;
 
@@ -56,7 +57,6 @@ const Row = styled(motion.ul)`
 `;
 
 const Item = styled(motion.li)<{ $bgImg: string }>`
-  position: relative;
   height: 100%;
   font-size: 3rem;
   color: red;
@@ -72,17 +72,32 @@ const Item = styled(motion.li)<{ $bgImg: string }>`
 `;
 
 const Info = styled(motion.div)`
-  position: absolute;
-  bottom: 0;
-  left: 0;
   padding: 0.5rem;
   width: 100%;
-  background-color: ${(props) => props.theme.black.lighter};
+  background-color: rgba(0, 0, 0, 0.8);
   opacity: 0;
   h3 {
     font-size: 0.75rem;
     color: ${(props) => props.theme.white.darker};
   }
+`;
+
+const Overlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0;
+`;
+
+const Card = styled(motion.div)`
+  position: absolute;
+  top: calc(50% - 40vw);
+  left: calc(50% - 40vh);
+  width: 80vw;
+  height: 80vh;
 `;
 
 const rowVariants = {
@@ -104,7 +119,6 @@ const itemVariants = {
   hover: {
     y: -30,
     scale: 1.3,
-    zIndex: 10,
     transition: {
       type: 'tween',
       delay: 0.3,
@@ -134,6 +148,10 @@ const Home = () => {
   const [index, setIndex] = useState(0);
   const [isLeave, setIsLeave] = useState(false);
 
+  const navigate = useNavigate();
+
+  const moviePathMatch = useMatch('/movies/:id');
+
   const increaseIndex = () => {
     if (data) {
       if (isLeave) return;
@@ -144,9 +162,13 @@ const Home = () => {
     }
   };
 
-  console.log(data);
-
   const toggleLeave = () => setIsLeave((prev) => !prev);
+
+  const onItemClicked = (movieId: number) => {
+    navigate(`/movies/${movieId}`);
+  };
+
+  const onOverlayClick = () => navigate('/');
 
   return (
     <Wrapper>
@@ -176,6 +198,8 @@ const Home = () => {
                     .map((item) => (
                       <Item
                         key={item.id}
+                        onClick={() => onItemClicked(item.id)}
+                        layoutId={item.id + ''}
                         variants={itemVariants}
                         initial="normal"
                         whileHover="hover"
@@ -190,6 +214,18 @@ const Home = () => {
                 </Row>
               </AnimatePresence>
             </Slider>
+            <AnimatePresence>
+              {moviePathMatch && (
+                <>
+                  <Overlay
+                    onClick={onOverlayClick}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  />
+                  <Card layoutId={moviePathMatch.params.id}></Card>
+                </>
+              )}
+            </AnimatePresence>
           </Visual>
         </>
       )}

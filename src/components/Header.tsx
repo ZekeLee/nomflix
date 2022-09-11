@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useMatch } from 'react-router-dom';
 
 import styled from 'styled-components';
@@ -101,6 +101,7 @@ const Header = () => {
 
   const homeMatch = useMatch('');
   const tvMatch = useMatch('tv');
+  const moviePathMatch = useMatch('/movies/:id');
 
   const headerRef = useRef<any>(null);
 
@@ -159,6 +160,7 @@ const Header = () => {
             <Item>
               <Link to="">Home</Link>
               {homeMatch && <Dot layoutId="dot" />}
+              {moviePathMatch && <Dot layoutId="dot" />}
             </Item>
             <Item>
               <Link to="tv">Tv Shows</Link>
