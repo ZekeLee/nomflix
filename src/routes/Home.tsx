@@ -5,7 +5,7 @@ import { getMovies, IMoviesResult } from '../api';
 import { makeImagePath } from '../utils';
 
 import styled from 'styled-components';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useScroll } from 'framer-motion';
 
 const Wrapper = styled.main``;
 
@@ -63,6 +63,7 @@ const Item = styled(motion.li)<{ $bgImg: string }>`
   background-image: url(${(props) => props.$bgImg});
   background-position: center center;
   background-size: cover;
+  border-radius: 5px;
   &:first-child {
     transform-origin: center left;
   }
@@ -92,12 +93,30 @@ const Overlay = styled(motion.div)`
   opacity: 0;
 `;
 
-const Card = styled(motion.div)`
+const Card = styled(motion.div)<{ $scrollY: number }>`
   position: absolute;
-  top: calc(50% - 40vw);
-  left: calc(50% - 40vh);
-  width: 80vw;
+  top: ${(props) => props.$scrollY + '10vh'};
+  left: calc(50% - 30vw);
+  width: 60vw;
   height: 80vh;
+  color: ${(props) => props.theme.white.lighter};
+  background-color: ${(props) => props.theme.black.lighter};
+  border-radius: 5px;
+  img {
+    display: block;
+    width: 100%;
+    border-radius: 5px 5px 0 0;
+  }
+  h4 {
+    font-size: 1.25rem;
+  }
+`;
+
+const Detail = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
 `;
 
 const rowVariants = {
@@ -151,6 +170,13 @@ const Home = () => {
   const navigate = useNavigate();
 
   const moviePathMatch = useMatch('/movies/:id');
+  const clickedVideo =
+    moviePathMatch?.params.id &&
+    data?.results.find((video) => video.id + '' === moviePathMatch.params.id);
+
+  console.log(clickedVideo);
+
+  const { scrollY } = useScroll();
 
   const increaseIndex = () => {
     if (data) {
@@ -176,10 +202,7 @@ const Home = () => {
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Visual
-            onClick={increaseIndex}
-            $bgImg={makeImagePath(data?.results[0].backdrop_path || '')}
-          >
+          <Visual $bgImg={makeImagePath(data?.results[0].backdrop_path || '')}>
             <Title>{data?.results[0].title}</Title>
             <Overview>{data?.results[0].overview}</Overview>
             <Slider>
@@ -222,7 +245,23 @@ const Home = () => {
                     animate={{ opacity: 1 }}
                     exit={{ opacity: 0 }}
                   />
-                  <Card layoutId={moviePathMatch.params.id}></Card>
+                  <Card
+                    layoutId={moviePathMatch.params.id}
+                    $scrollY={scrollY.get()}
+                  >
+                    {clickedVideo && (
+                      <>
+                        <img
+                          src={makeImagePath(clickedVideo.backdrop_path)}
+                          alt={clickedVideo.original_title}
+                        />
+                        <Detail>
+                          <h4>{clickedVideo.title}</h4>
+                          <p>{clickedVideo.overview}</p>
+                        </Detail>
+                      </>
+                    )}
+                  </Card>
                 </>
               )}
             </AnimatePresence>

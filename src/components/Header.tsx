@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
-import { Link, useMatch } from 'react-router-dom';
+import { Link, useMatch, useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
 import { motion, useAnimation, useScroll } from 'framer-motion';
+import { useForm } from 'react-hook-form';
 
 const HeaderEl = styled(motion.header)`
   position: fixed;
@@ -58,7 +59,7 @@ const Dot = styled(motion.span)`
   border-radius: 50%;
 `;
 
-const Search = styled(motion.div)`
+const Search = styled(motion.form)`
   position: relative;
   display: flex;
   align-items: center;
@@ -96,6 +97,10 @@ const logoVariants = {
   },
 };
 
+interface IForm {
+  keyword: string;
+}
+
 const Header = () => {
   const [isSearchActive, setIsSearchActive] = useState(false);
 
@@ -109,6 +114,13 @@ const Header = () => {
   const inputAnimation = useAnimation();
 
   const { scrollY } = useScroll();
+
+  const { register, handleSubmit } = useForm<IForm>();
+  const onValid = (data: IForm) => {
+    navigate(`/search?keyword=${data.keyword}`);
+  };
+
+  const navigate = useNavigate();
 
   const toggleSearch = () => {
     if (isSearchActive) {
@@ -174,6 +186,7 @@ const Header = () => {
             initial={{ width: '1.5rem' }}
             animate={{ width: isSearchActive ? 'auto' : '1.5rem' }}
             transition={{ type: 'linear' }}
+            onSubmit={handleSubmit(onValid)}
           >
             <button type="button" onClick={toggleSearch}>
               <svg
@@ -186,6 +199,7 @@ const Header = () => {
             </button>
             <Input
               type="text"
+              {...register('keyword', { required: true, minLength: 2 })}
               initial={{ scaleX: 0 }}
               animate={inputAnimation}
               transition={{ type: 'linear' }}
