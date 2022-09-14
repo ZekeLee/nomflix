@@ -19,6 +19,7 @@ const Nav = styled.nav`
   align-items: center;
   justify-content: space-between;
   height: 4rem;
+  overflow: hidden;
 `;
 
 const Col = styled.div`
@@ -170,7 +171,7 @@ const Header = () => {
           </Link>
           <Items>
             <Item>
-              <Link to="">Home</Link>
+              <Link to="">Movies</Link>
               {homeMatch && <Dot layoutId="dot" />}
               {moviePathMatch && <Dot layoutId="dot" />}
             </Item>
