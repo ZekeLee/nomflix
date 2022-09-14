@@ -11,6 +11,7 @@ const HeaderEl = styled(motion.header)`
   left: 0;
   padding: 0 2rem;
   width: 100%;
+  height: 4rem;
   font-size: 0.875rem;
 `;
 
@@ -18,7 +19,7 @@ const Nav = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 4rem;
+  height: 100%;
   overflow: hidden;
 `;
 
