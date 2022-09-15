@@ -1,11 +1,13 @@
-import { useQuery } from 'react-query';
-import { getMovies, IMoviesResult } from '../api';
+import { useQueries } from 'react-query';
+import { getMovies, getTopRatedMovies } from '../api';
 import { makeImagePath } from '../utils';
 import VideoSlider from '../components/VideoSlider';
 
 import styled from 'styled-components';
 
-const Wrapper = styled.main``;
+const Wrapper = styled.main`
+  height: 100%;
+`;
 
 const Loader = styled.div`
   display: flex;
@@ -20,7 +22,7 @@ const Visual = styled.section<{ $bgImg: string }>`
   justify-content: center;
   gap: 2rem;
   padding: 4rem 2rem 2rem 2rem;
-  height: 100vh;
+  height: 100%;
   background-image: linear-gradient(rgba(0, 0, 0, 0.8) 4rem, rgba(0, 0, 0, 0)),
     url(${(props) => props.$bgImg});
   background-size: cover;
@@ -31,28 +33,42 @@ const Title = styled.h2`
 `;
 
 const Overview = styled.p`
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
   font-size: 1.25rem;
   line-height: 1.25;
+  overflow: hidden;
 `;
 
 const Movies = () => {
-  const { data, isLoading } = useQuery<IMoviesResult>(
-    ['movies', 'nowPlaying'],
-    getMovies
-  );
+  const result = useQueries([
+    {
+      queryKey: ['movies', 'nowPlayingMovies'],
+      queryFn: getMovies,
+    },
+    {
+      queryKey: ['movies', 'topRatedMovies'],
+      queryFn: getTopRatedMovies,
+    },
+  ]);
 
-  const movies = data;
+  const [{ data: nowPlaying }, { data: topRated }] = result;
+
+  const finishLoading = result.some((result) => result.isLoading);
 
   return (
     <Wrapper>
-      {isLoading ? (
+      {finishLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <>
-          <Visual $bgImg={makeImagePath(data?.results[0].backdrop_path || '')}>
-            <Title>{data?.results[0].title}</Title>
-            <Overview>{data?.results[0].overview}</Overview>
-            <VideoSlider movies={movies} />
+          <Visual
+            $bgImg={makeImagePath(nowPlaying?.results[0].backdrop_path || '')}
+          >
+            <Title>{nowPlaying?.results[0].title}</Title>
+            <Overview>{nowPlaying?.results[0].overview}</Overview>
+            <VideoSlider movies={nowPlaying} />
           </Visual>
         </>
       )}

@@ -66,8 +66,26 @@ export const getMovies = () => {
   );
 };
 
+export const getTopRatedMovies = () => {
+  return fetch(`${BASE_PATH}/movie/top_rated?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+};
+
 export const getTvShows = () => {
   return fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}`).then(
     (response) => response.json()
   );
+};
+
+export const getTopRatedTvShows = () => {
+  return fetch(`${BASE_PATH}/tv/top_rated?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+};
+
+export const getSearch = (keyword: string) => {
+  return fetch(
+    `${BASE_PATH}/search/multi?api_key=${API_KEY}&query=${keyword}`
+  ).then((response) => response.json());
 };
