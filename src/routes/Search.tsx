@@ -27,11 +27,15 @@ const Loader = styled.div`
 `;
 
 const List = styled.ul`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
   height: 100%;
 `;
 
 const Item = styled.li`
   display: flex;
+  gap: 0.5rem;
   img {
     display: block;
     width: 5rem;
@@ -46,6 +50,7 @@ interface ISearchResult {
   genre_ids: number[];
   id: number;
   media_type: string;
+  original_country: string[];
   original_language: string;
   original_title: string;
   overview: string;
@@ -85,24 +90,34 @@ const Search = () => {
         <Wrapper>
           <Section>
             <List>
-              {data.results.map((result: ISearchResult) => (
-                <Item key={result.id}>
-                  <img
-                    src={
-                      result.backdrop_path
-                        ? makeImagePath(result.backdrop_path, 'w200')
-                        : result.poster_path
-                        ? makeImagePath(result.poster_path, 'w200')
-                        : result.profile_path
-                        ? makeImagePath(result.profile_path, 'w200')
-                        : ''
-                    }
-                    alt={result.title || result.name}
-                  />
-
-                  <h2>{result.title || result.name}</h2>
-                </Item>
-              ))}
+              {data.results.length !== 0
+                ? data.results.map((result: ISearchResult) => (
+                    <Item key={result.id}>
+                      <img
+                        src={
+                          result.backdrop_path
+                            ? makeImagePath(result.backdrop_path, 'w200')
+                            : result.poster_path
+                            ? makeImagePath(result.poster_path, 'w200')
+                            : result.profile_path
+                            ? makeImagePath(result.profile_path, 'w200')
+                            : 'https://via.placeholder.com/200x113'
+                        }
+                        alt={result.title || result.name}
+                      />
+                      <div>
+                        <h2>{result.title || result.name}</h2>
+                        <span>{result.media_type.toUpperCase()} </span>
+                        <span>{result.adult ? '| 19' : null}</span>
+                        <p>
+                          {result.media_type !== 'person'
+                            ? `⭐${result.vote_average} | 🧑‍🤝‍🧑${result.vote_count}`
+                            : null}
+                        </p>
+                      </div>
+                    </Item>
+                  ))
+                : '😭 No search results found.'}
             </List>
           </Section>
         </Wrapper>
