@@ -1,9 +1,11 @@
+import { useState, useEffect } from 'react';
 import { useQueries } from 'react-query';
-import { getTopRatedTvShows, getTvShows } from '../api';
+import { getTopRatedTvShows, getTvShows, ITvShow } from '../api';
 import { makeImagePath } from '../utils';
 import VideoSlider from '../components/VideoSlider';
 
 import styled from 'styled-components';
+import Modal from '../components/Modal';
 
 const Wrapper = styled.main`
   height: 100%;
@@ -42,13 +44,15 @@ const Overview = styled.p`
 `;
 
 const TvShows = () => {
+  const [allTvShows, setAllTvShows] = useState<ITvShow[]>([]);
+
   const result = useQueries([
     {
-      queryKey: ['tvShows', 'onTheAirTvShows'],
+      queryKey: ['tvShows', 'onTheAir'],
       queryFn: getTvShows,
     },
     {
-      queryKey: ['tvShows', 'topRatedTvShows'],
+      queryKey: ['tvShows', 'topRated'],
       queryFn: getTopRatedTvShows,
     },
   ]);
@@ -56,6 +60,13 @@ const TvShows = () => {
   const [{ data: onTheAir }, { data: topRated }] = result;
 
   const finishLoading = result.some((result) => result.isLoading);
+
+  useEffect(() => {
+    if (!finishLoading) {
+      setAllTvShows([...onTheAir.results, ...topRated.results]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finishLoading]);
 
   return (
     <Wrapper>
@@ -68,7 +79,9 @@ const TvShows = () => {
           >
             <Title>{onTheAir?.results[0].name}</Title>
             <Overview>{onTheAir?.results[0].overview}</Overview>
-            <VideoSlider tvShows={onTheAir} />
+            <VideoSlider title={'On The Air'} tvShows={onTheAir} />
+            <VideoSlider title={'Top Rated'} tvShows={topRated} />
+            <Modal tvShows={[onTheAir, topRated]} allTvShows={allTvShows} />
           </Visual>
         </>
       )}

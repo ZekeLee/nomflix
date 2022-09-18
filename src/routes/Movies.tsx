@@ -1,9 +1,17 @@
+import { useState, useEffect } from 'react';
 import { useQueries } from 'react-query';
-import { getMovies, getTopRatedMovies } from '../api';
+import {
+  getPopularMovies,
+  getMovies,
+  getTopRatedMovies,
+  getUpComingMovies,
+  IMovie,
+} from '../api';
 import { makeImagePath } from '../utils';
 import VideoSlider from '../components/VideoSlider';
 
 import styled from 'styled-components';
+import Modal from '../components/Modal';
 
 const Wrapper = styled.main`
   height: 100%;
@@ -42,20 +50,47 @@ const Overview = styled.p`
 `;
 
 const Movies = () => {
+  const [allMovies, setAllMovies] = useState<IMovie[]>([]);
+
   const result = useQueries([
     {
-      queryKey: ['movies', 'nowPlayingMovies'],
+      queryKey: ['movies', 'nowPlaying'],
       queryFn: getMovies,
     },
     {
-      queryKey: ['movies', 'topRatedMovies'],
+      queryKey: ['movies', 'popular'],
+      queryFn: getPopularMovies,
+    },
+    {
+      queryKey: ['movies', 'topRated'],
       queryFn: getTopRatedMovies,
+    },
+    {
+      queryKey: ['movies', 'upComing'],
+      queryFn: getUpComingMovies,
     },
   ]);
 
-  const [{ data: nowPlaying }, { data: topRated }] = result;
+  const [
+    { data: nowPlaying },
+    { data: popular },
+    { data: topRated },
+    { data: upComing },
+  ] = result;
 
   const finishLoading = result.some((result) => result.isLoading);
+
+  useEffect(() => {
+    if (!finishLoading) {
+      setAllMovies([
+        ...nowPlaying.results,
+        ...popular.results,
+        ...topRated.results,
+        ...upComing.results,
+      ]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [finishLoading]);
 
   return (
     <Wrapper>
@@ -68,7 +103,14 @@ const Movies = () => {
           >
             <Title>{nowPlaying?.results[0].title}</Title>
             <Overview>{nowPlaying?.results[0].overview}</Overview>
-            <VideoSlider movies={nowPlaying} />
+            <VideoSlider title={'Now Playing'} movies={nowPlaying} />
+            <VideoSlider title={'Popular'} movies={popular} />
+            <VideoSlider title={'Top Rated'} movies={topRated} />
+            <VideoSlider title={'Upcoming'} movies={upComing} />
+            <Modal
+              movies={[nowPlaying, popular, topRated, upComing]}
+              allMovies={allMovies}
+            />
           </Visual>
         </>
       )}

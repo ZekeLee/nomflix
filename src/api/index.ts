@@ -66,8 +66,20 @@ export const getMovies = () => {
   );
 };
 
+export const getPopularMovies = () => {
+  return fetch(`${BASE_PATH}/movie/popular?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+};
+
 export const getTopRatedMovies = () => {
   return fetch(`${BASE_PATH}/movie/top_rated?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+};
+
+export const getUpComingMovies = () => {
+  return fetch(`${BASE_PATH}/movie/upcoming?api_key=${API_KEY}`).then(
     (response) => response.json()
   );
 };

@@ -1,10 +1,9 @@
 import { useState } from 'react';
-import { useMatch, useNavigate } from 'react-router-dom';
-import { IMovie, ITvShow } from '../api';
-import { makeImagePath } from '../utils';
+import { useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { motion, AnimatePresence, useScroll } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
+import { makeImagePath } from '../utils';
 
 const Slider = styled.article`
   position: relative;
@@ -51,49 +50,6 @@ const Info = styled(motion.div)`
   h3 {
     font-size: 0.75rem;
     color: ${(props) => props.theme.white.darker};
-  }
-`;
-
-const Overlay = styled(motion.div)`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  opacity: 0;
-`;
-
-const Card = styled(motion.div)<{ $scrollY: number }>`
-  position: absolute;
-  top: ${(props) => props.$scrollY + '10vh'};
-  left: calc(50% - 22vw);
-  width: 40vw;
-  height: 80vh;
-  color: ${(props) => props.theme.white.lighter};
-  background-color: ${(props) => props.theme.black.lighter};
-  border-radius: 5px;
-  img {
-    display: block;
-    width: 100%;
-    border-radius: 5px 5px 0 0;
-  }
-  h4 {
-    font-size: 1.25rem;
-  }
-`;
-
-const Detail = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  padding: 1rem;
-  p {
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
-    line-height: 1.2;
-    overflow: hidden;
   }
 `;
 
@@ -164,8 +120,6 @@ const VideoSlider = ({ movies, tvShows }: any) => {
 
   const navigate = useNavigate();
 
-  const { scrollY } = useScroll();
-
   const toggleLeave = () => setIsLeave((prev) => !prev);
 
   const onItemClicked = (videoId: number) => {
@@ -192,25 +146,6 @@ const VideoSlider = ({ movies, tvShows }: any) => {
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
-
-  const onOverlayClick = () => {
-    if (movies) navigate('/');
-    if (tvShows) navigate('/tv');
-  };
-
-  const moviePathMatch = useMatch('/movies/:id');
-  const tvShowPathMatch = useMatch('/tv/:id');
-
-  const clickedMovie =
-    moviePathMatch?.params.id &&
-    movies?.results.find(
-      (movie: IMovie) => movie.id + '' === moviePathMatch.params.id
-    );
-  const clickedTvShow =
-    tvShowPathMatch?.params.id &&
-    tvShows?.results.find(
-      (tvShow: ITvShow) => tvShow.id + '' === tvShowPathMatch.params.id
-    );
 
   return (
     <>
@@ -277,63 +212,6 @@ const VideoSlider = ({ movies, tvShows }: any) => {
           </Row>
         </AnimatePresence>
       </Slider>
-      <AnimatePresence>
-        {movies
-          ? moviePathMatch && (
-              <>
-                <Overlay
-                  onClick={onOverlayClick}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-                <Card
-                  layoutId={moviePathMatch.params.id}
-                  $scrollY={scrollY.get()}
-                >
-                  {clickedMovie && (
-                    <>
-                      <img
-                        src={makeImagePath(clickedMovie.backdrop_path, 'w500')}
-                        alt={clickedMovie.original_title}
-                      />
-                      <Detail>
-                        <h4>{clickedMovie.title}</h4>
-                        <p>{clickedMovie.overview}</p>
-                      </Detail>
-                    </>
-                  )}
-                </Card>
-              </>
-            )
-          : tvShows
-          ? tvShowPathMatch && (
-              <>
-                <Overlay
-                  onClick={onOverlayClick}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                />
-                <Card
-                  layoutId={tvShowPathMatch.params.id}
-                  $scrollY={scrollY.get()}
-                >
-                  {clickedTvShow && (
-                    <>
-                      <img
-                        src={makeImagePath(clickedTvShow.backdrop_path)}
-                        alt={clickedTvShow.original_name}
-                      />
-                      <Detail>
-                        <h4>{clickedTvShow.name}</h4>
-                        <p>{clickedTvShow.overview}</p>
-                      </Detail>
-                    </>
-                  )}
-                </Card>
-              </>
-            )
-          : null}
-      </AnimatePresence>
     </>
   );
 };
