@@ -3,7 +3,7 @@ import { useMatch, useNavigate } from 'react-router-dom';
 import { makeImagePath } from '../utils';
 
 import styled from 'styled-components';
-import { IMovie, ITvShow } from '../api';
+import { IMovie, IMoviesResult, ITvShow, ITvShowsResult } from '../api';
 
 const Overlay = styled(motion.div)`
   position: fixed;
@@ -48,8 +48,17 @@ const Detail = styled.div`
   }
 `;
 
-const Modal = ({ movies, tvShows, allMovies, allTvShows }: any) => {
+interface IPropsData {
+  movies?: IMoviesResult[];
+  tvShows?: ITvShowsResult[];
+  allMovies?: IMovie[];
+  allTvShows?: ITvShow[];
+}
+
+const Modal = ({ movies, tvShows, allMovies, allTvShows }: IPropsData) => {
   const { scrollY } = useScroll();
+
+  console.log(movies, tvShows, allMovies, allTvShows);
 
   const navigate = useNavigate();
 
@@ -63,16 +72,14 @@ const Modal = ({ movies, tvShows, allMovies, allTvShows }: any) => {
 
   const clickedMovie =
     moviePathMatch?.params.id &&
-    allMovies.find(
+    allMovies?.find(
       (movie: IMovie) => movie.id + '' === moviePathMatch.params.id
     );
   const clickedTvShow =
     tvShowPathMatch?.params.id &&
-    allTvShows.find(
+    allTvShows?.find(
       (tvShow: ITvShow) => tvShow.id + '' === tvShowPathMatch.params.id
     );
-
-  console.log(clickedMovie);
 
   return (
     <AnimatePresence>

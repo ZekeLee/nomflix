@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { makeImagePath } from '../utils';
+import { IMoviesResult, ITvShowsResult } from '../api';
 
 const Slider = styled.article`
   position: relative;
@@ -114,7 +115,13 @@ const infoVariants = {
 
 const offset = 6;
 
-const VideoSlider = ({ movies, tvShows }: any) => {
+interface IPropsData {
+  movies?: IMoviesResult;
+  tvShows?: ITvShowsResult;
+  title: string;
+}
+
+const VideoSlider = ({ movies, tvShows, title }: IPropsData) => {
   const [index, setIndex] = useState(0);
   const [isLeave, setIsLeave] = useState(false);
 
