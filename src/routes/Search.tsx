@@ -73,6 +73,8 @@ const Search = () => {
     getSearch(keyword as string)
   );
 
+  console.log(data);
+
   useEffect(() => {
     if (keyword !== searchKeyword) {
       setSearchKeyword(keyword);

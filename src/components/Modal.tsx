@@ -42,7 +42,7 @@ const Detail = styled.div`
   p {
     display: -webkit-box;
     -webkit-box-orient: vertical;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 5;
     line-height: 1.2;
     overflow: hidden;
   }
