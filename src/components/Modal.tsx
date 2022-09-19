@@ -46,6 +46,11 @@ const Detail = styled.div`
     line-height: 1.2;
     overflow: hidden;
   }
+  .genres {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
 `;
 
 interface IPropsData {
@@ -53,12 +58,28 @@ interface IPropsData {
   tvShows?: ITvShowsResult[];
   allMovies?: IMovie[];
   allTvShows?: ITvShow[];
+  movieGenres?: IGenres;
+  tvShowGenres?: IGenres;
 }
 
-const Modal = ({ movies, tvShows, allMovies, allTvShows }: IPropsData) => {
-  const { scrollY } = useScroll();
+interface IGenres {
+  genres: Genre[];
+}
 
-  console.log(movies, tvShows, allMovies, allTvShows);
+interface Genre {
+  id: number;
+  name: string;
+}
+
+const Modal = ({
+  movies,
+  tvShows,
+  allMovies,
+  allTvShows,
+  movieGenres,
+  tvShowGenres,
+}: IPropsData) => {
+  const { scrollY } = useScroll();
 
   const navigate = useNavigate();
 
@@ -80,6 +101,8 @@ const Modal = ({ movies, tvShows, allMovies, allTvShows }: IPropsData) => {
     allTvShows?.find(
       (tvShow: ITvShow) => tvShow.id + '' === tvShowPathMatch.params.id
     );
+
+  console.log(clickedTvShow);
 
   return (
     <AnimatePresence>
@@ -103,6 +126,24 @@ const Modal = ({ movies, tvShows, allMovies, allTvShows }: IPropsData) => {
                     />
                     <Detail>
                       <h4>{clickedMovie.title}</h4>
+                      <p className="genres">
+                        {clickedMovie.genre_ids.map((genre, index) => {
+                          const genres = movieGenres?.genres.filter(
+                            (i) => i.id === genre
+                          );
+
+                          return (
+                            <span key={index}>
+                              {genres ? genres[0].name : null}
+                            </span>
+                          );
+                        })}
+                      </p>
+                      <p>
+                        Release Date: {clickedMovie.release_date.toString()}
+                      </p>
+                      <p>Grade: {clickedMovie.vote_average}</p>
+                      <p>Vote Count: {clickedMovie.vote_count}</p>
                       <p>{clickedMovie.overview}</p>
                     </Detail>
                   </>
@@ -130,6 +171,25 @@ const Modal = ({ movies, tvShows, allMovies, allTvShows }: IPropsData) => {
                     />
                     <Detail>
                       <h4>{clickedTvShow.name}</h4>
+                      <p className="genres">
+                        {clickedTvShow.genre_ids.map((genre, index) => {
+                          const genres = tvShowGenres?.genres.filter(
+                            (i) => i.id === genre
+                          );
+
+                          return (
+                            <span key={index}>
+                              {genres ? genres[0].name : null}
+                            </span>
+                          );
+                        })}
+                      </p>
+                      <p>
+                        First Air Date:{' '}
+                        {clickedTvShow.first_air_date.toString()}
+                      </p>
+                      <p>Grade: {clickedTvShow.vote_average}</p>
+                      <p>Vote Count: {clickedTvShow.vote_count}</p>
                       <p>{clickedTvShow.overview}</p>
                     </Detail>
                   </>

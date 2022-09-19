@@ -6,13 +6,17 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { makeImagePath } from '../utils';
 import { IMoviesResult, ITvShowsResult } from '../api';
 
+const Title = styled.h3`
+  margin-bottom: 1rem;
+  padding: 0 2rem;
+  font-size: 1.25rem;
+`;
+
 const Slider = styled.article`
   position: relative;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  margin: 0 -2rem;
-  width: calc(100% + 4rem);
   height: 8rem;
 `;
 
@@ -155,7 +159,8 @@ const VideoSlider = ({ movies, tvShows, title }: IPropsData) => {
   };
 
   return (
-    <>
+    <section>
+      <Title>{title}</Title>
       <Slider>
         <AnimatePresence initial={false} onExitComplete={toggleLeave}>
           <Row
@@ -219,7 +224,7 @@ const VideoSlider = ({ movies, tvShows, title }: IPropsData) => {
           </Row>
         </AnimatePresence>
       </Slider>
-    </>
+    </section>
   );
 };
 

@@ -101,3 +101,15 @@ export const getSearch = (keyword: string) => {
     `${BASE_PATH}/search/multi?api_key=${API_KEY}&query=${keyword}`
   ).then((response) => response.json());
 };
+
+export const getMoviesGenres = () => {
+  return fetch(`${BASE_PATH}/genre/movie/list?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+};
+
+export const getTvShowsGenres = () => {
+  return fetch(`${BASE_PATH}/genre/tv/list?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+};

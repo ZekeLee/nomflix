@@ -6,15 +6,19 @@ import {
   getTopRatedMovies,
   getUpComingMovies,
   IMovie,
+  getMoviesGenres,
 } from '../api';
 import { makeImagePath } from '../utils';
 import VideoSlider from '../components/VideoSlider';
-
-import styled from 'styled-components';
 import Modal from '../components/Modal';
 
+import styled from 'styled-components';
+
 const Wrapper = styled.main`
-  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-bottom: 2rem;
 `;
 
 const Loader = styled.div`
@@ -30,10 +34,11 @@ const Visual = styled.section<{ $bgImg: string }>`
   justify-content: center;
   gap: 2rem;
   padding: 4rem 2rem 2rem 2rem;
-  height: 100%;
+  min-height: 100vh;
   background-image: linear-gradient(rgba(0, 0, 0, 0.8) 4rem, rgba(0, 0, 0, 0)),
     url(${(props) => props.$bgImg});
-  background-size: cover;
+  background-repeat: no-repeat;
+  background-size: 100vw 100vh;
 `;
 
 const Title = styled.h2`
@@ -43,7 +48,7 @@ const Title = styled.h2`
 const Overview = styled.p`
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   font-size: 1.25rem;
   line-height: 1.25;
   overflow: hidden;
@@ -69,6 +74,10 @@ const Movies = () => {
       queryKey: ['movies', 'upComing'],
       queryFn: getUpComingMovies,
     },
+    {
+      queryKey: 'genres',
+      queryFn: getMoviesGenres,
+    },
   ]);
 
   const [
@@ -76,6 +85,7 @@ const Movies = () => {
     { data: popular },
     { data: topRated },
     { data: upComing },
+    { data: genres },
   ] = result;
 
   const finishLoading = result.some((result) => result.isLoading);
@@ -103,15 +113,16 @@ const Movies = () => {
           >
             <Title>{nowPlaying?.results[0].title}</Title>
             <Overview>{nowPlaying?.results[0].overview}</Overview>
-            <VideoSlider title={'Now Playing'} movies={nowPlaying} />
-            <VideoSlider title={'Popular'} movies={popular} />
-            <VideoSlider title={'Top Rated'} movies={topRated} />
-            <VideoSlider title={'Upcoming'} movies={upComing} />
-            <Modal
-              movies={[nowPlaying, popular, topRated, upComing]}
-              allMovies={allMovies}
-            />
           </Visual>
+          <VideoSlider title={'Now Playing'} movies={nowPlaying} />
+          <VideoSlider title={'Popular'} movies={popular} />
+          <VideoSlider title={'Top Rated'} movies={topRated} />
+          <VideoSlider title={'Upcoming'} movies={upComing} />
+          <Modal
+            movies={[nowPlaying, popular, topRated, upComing]}
+            allMovies={allMovies}
+            movieGenres={genres}
+          />
         </>
       )}
     </Wrapper>

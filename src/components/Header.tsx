@@ -1,18 +1,19 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import { Link, useMatch, useNavigate } from 'react-router-dom';
 
 import styled from 'styled-components';
-import { motion, useAnimation, useScroll } from 'framer-motion';
+import { motion, useAnimation } from 'framer-motion';
 import { useForm } from 'react-hook-form';
 
 const HeaderEl = styled(motion.header)`
-  position: fixed;
+  position: sticky;
   top: 0;
   left: 0;
   padding: 0 2rem;
   width: 100%;
   height: 4rem;
   font-size: 0.875rem;
+  background-color: #000;
 `;
 
 const Nav = styled.nav`
@@ -85,11 +86,6 @@ const Input = styled(motion.input)`
   transform-origin: right;
 `;
 
-const headerVariants = {
-  top: { backgroundColor: 'rgba(0, 0, 0, 0)' },
-  scroll: { backgroundColor: 'rgba(0, 0, 0, 1)' },
-};
-
 const logoVariants = {
   normal: {
     opacity: 1,
@@ -110,12 +106,7 @@ const Header = () => {
   const tvMatch = useMatch('tv');
   const moviePathMatch = useMatch('/movies/:id');
 
-  const headerRef = useRef<any>(null);
-
-  const headerAnimation = useAnimation();
   const inputAnimation = useAnimation();
-
-  const { scrollY } = useScroll();
 
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
@@ -135,23 +126,8 @@ const Header = () => {
     setIsSearchActive((prev) => !prev);
   };
 
-  useEffect(() => {
-    scrollY.onChange(() => {
-      if (scrollY.get() > headerRef.current?.clientHeight) {
-        headerAnimation.start('scroll');
-      } else {
-        headerAnimation.start('top');
-      }
-    });
-  }, [scrollY, headerAnimation]);
-
   return (
-    <HeaderEl
-      ref={headerRef}
-      variants={headerVariants}
-      initial="top"
-      animate={headerAnimation}
-    >
+    <HeaderEl>
       <Nav>
         <Col>
           <Link to="">
