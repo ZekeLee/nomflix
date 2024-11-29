@@ -2,7 +2,7 @@
 
 ## 📌 Deploy URL
 
-- [https://dingunote.github.io/nomflix/](https://dingunote.github.io/nomflix/)
+- [https://zekelee.github.io/nomflix/](https://zekelee.github.io/nomflix/)
 
 ## 📌 Skills
 
